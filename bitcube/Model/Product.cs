@@ -1,4 +1,5 @@
-﻿using System;
+﻿using bitcube.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -46,7 +47,41 @@ namespace bitcube.Model
             this.created = DateTime.Now;
             this.last_updated = DateTime.Now;
         }
-
         public Product() { }
+
+        /*
+         *  This will set any changed field from the given UserViewModel 
+         *  It will return a clone of the old object, after applying the new changes 
+         */
+        public Product applyChangesFromUserViewModel(ProductViewModel modelWithChanges)
+        {
+            // Previous state
+            var prevObject = (Product) this.MemberwiseClone();
+
+            // Apply changes
+            this.productName = modelWithChanges.product_name;
+            this.productPrice = modelWithChanges.product_price;
+            this.quantity = modelWithChanges.quantity;
+            this.last_updated = DateTime.Now;
+
+            return prevObject;
+        }
+
+        /*
+         *  Filter object to remove all sensetive information
+         */
+        public object getFilteredObject()
+        {
+            return new
+            {
+                productId = productId,
+                productName = productName,
+                productPrice = productPrice,
+                quantity = quantity,
+                createdBy = this.createdBy.username,
+                created = DateTime.Now,
+                last_updated = DateTime.Now
+            };
+        }
     }
 }

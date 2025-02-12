@@ -158,5 +158,51 @@ namespace bitcube.Controllers
             return Ok(product_id);
         }
 
+        /*
+         *  Modify a product 
+         *  PUT:
+         *      product_id : string
+         *      product_name : string
+         *      product_price : double 
+         *      quantity : long
+         *  Requirements
+         *      - authenticated user
+         *      - user should be the owner of the product
+         */
+        [HttpPut]
+        [Route("modify-product")]
+        [AuthorizationRequired]
+        public async Task<IActionResult> modifyProduct([FromBody] ProductViewModel product)
+        {
+            // Get the user 
+            var userData = (User)HttpContext.Items["userData"];
+
+            // fetch the product from the database 
+            var dbProduct = await dbContext.products.Include(dbProduct => dbProduct.createdBy).FirstOrDefaultAsync(dbProduct => dbProduct.productId == product.product_id);
+
+            // Check if the product does not exists 
+            if (dbProduct == null)
+            {
+                return NotFound(Utils.collection.errorResponse(404, $"product with id {product.product_id} was not found"));
+            }
+
+            // Check if the user is the owner of the product 
+            if (dbProduct.createdBy.username != userData.username)
+            {
+                HttpContext.Response.StatusCode = 403;
+                return Content($"user not owner of product with id {dbProduct.productId}");
+            }
+
+            // apply the change and save the changes
+            var prevState = dbProduct.applyChangesFromUserViewModel(product);
+            dbContext.SaveChanges();
+
+            // Return the old object and the new one
+            return Ok(new
+            {
+                new_object = dbProduct.getFilteredObject(),
+                old_object = prevState.getFilteredObject()
+            });
+        }
     }
 }
