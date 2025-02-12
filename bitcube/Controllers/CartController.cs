@@ -149,8 +149,43 @@ namespace bitcube.Controllers
         }
 
         /*
-         *   
-         * 
+         *   Get the cart of a client 
+         *   (GET) 
+         *   Requirements:  
+         *      - Authenticated user 
          */
+        [HttpGet]
+        [Route("cart")]
+        [AuthorizationRequired]
+        public async Task<IActionResult> cart()
+        {
+            // Get the user 
+            var userData = (User)HttpContext.Items["userData"];
+            var user = await dbContext.users.FirstOrDefaultAsync(dbUser => dbUser.username == userData.username);
+
+            // Get the user's cart 
+            var cart = await Cart.getCartUsingUsername(userData.username,dbContext);
+
+            // Check if the user has a cart 
+            if (cart == null)
+            {
+                return Ok(new List<CartProduct>() { });
+            }
+
+            var cartProduct = await dbContext.cartProducts
+                .Where(dbCartProduct => dbCartProduct.cart == cart)
+                .Select(dbCartProduct => new {
+                    product_id = dbCartProduct.product.productId,
+                    product_name = dbCartProduct.product.productName,
+                    product_price = dbCartProduct.product.productPrice,
+                    quantity = dbCartProduct.quantity,
+                    subtotal = dbCartProduct.product.productPrice * dbCartProduct.quantity,
+                    cart_ref = dbCartProduct.cart.reference
+                })
+                .ToListAsync();
+
+
+            return Ok(cartProduct);
+        }
     }
 }
