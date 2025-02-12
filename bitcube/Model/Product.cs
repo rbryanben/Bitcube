@@ -83,5 +83,6 @@ namespace bitcube.Model
                 last_updated = DateTime.Now
             };
         }
+
     }
 }

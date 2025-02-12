@@ -16,6 +16,65 @@ namespace bitcube.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.0");
 
+            modelBuilder.Entity("bitcube.Model.Cart", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("last_updated")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("open")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ownerusername")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("reference")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("ownerusername");
+
+                    b.ToTable("cart");
+                });
+
+            modelBuilder.Entity("bitcube.Model.CartProduct", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("cartid")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("last_updated")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("productid")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("quantity")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("cartid");
+
+                    b.HasIndex("productid");
+
+                    b.ToTable("cartProducts");
+                });
+
             modelBuilder.Entity("bitcube.Model.Product", b =>
                 {
                     b.Property<int>("id")
@@ -80,6 +139,30 @@ namespace bitcube.Migrations
                     b.HasKey("username");
 
                     b.ToTable("users");
+                });
+
+            modelBuilder.Entity("bitcube.Model.Cart", b =>
+                {
+                    b.HasOne("bitcube.Model.User", "owner")
+                        .WithMany()
+                        .HasForeignKey("ownerusername");
+
+                    b.Navigation("owner");
+                });
+
+            modelBuilder.Entity("bitcube.Model.CartProduct", b =>
+                {
+                    b.HasOne("bitcube.Model.Cart", "cart")
+                        .WithMany()
+                        .HasForeignKey("cartid");
+
+                    b.HasOne("bitcube.Model.Product", "product")
+                        .WithMany()
+                        .HasForeignKey("productid");
+
+                    b.Navigation("cart");
+
+                    b.Navigation("product");
                 });
 
             modelBuilder.Entity("bitcube.Model.Product", b =>

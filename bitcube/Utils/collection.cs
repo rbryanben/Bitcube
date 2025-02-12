@@ -15,8 +15,13 @@ namespace bitcube.Utils
          *   Generate a key that can be used for purposes tokens and api key or reference
          *   Why ? central place to change the complexity of the generation of these UUI
          */
-        public static string generateKey()
+        public static string generateKey(bool shortToken = false)
         {
+            if (shortToken)
+            {
+                return Guid.NewGuid().ToString();
+            }
+
             // Lets be simple here
             return Guid.NewGuid().ToString() + Guid.NewGuid().ToString();
         }
@@ -31,6 +36,16 @@ namespace bitcube.Utils
                 statusCode = statusCode,
                 error = error
             };
+        }
+
+        /*
+         *  Common response 
+         */
+        public enum CommonResponses { 
+            PRODUCT_NOT_FOUND,
+            ADDED_TO_CART,
+            NOT_ENOUGH_STOCK,
+            SUCCESS
         }
     }
 }
