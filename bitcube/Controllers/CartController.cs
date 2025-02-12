@@ -78,7 +78,10 @@ namespace bitcube.Controllers
                     res.Add(new
                     {
                         product_id = productToAdd.product_id,
-                        status = Utils.collection.CommonResponses.PRODUCT_NOT_FOUND.ToString()
+                        status = Utils.collection.CommonResponses.PRODUCT_NOT_FOUND.ToString(),
+                        item_price = 0,
+                        total_price = 0,
+                        quantity_in_cart = 0
                     });
                     
                     // continue with the list
@@ -91,7 +94,10 @@ namespace bitcube.Controllers
                     res.Add(new
                     {
                         product_id = productToAdd.product_id,
-                        status = Utils.collection.CommonResponses.NOT_ENOUGH_STOCK.ToString()
+                        status = Utils.collection.CommonResponses.NOT_ENOUGH_STOCK.ToString(),
+                        item_price = 0,
+                        total_price = 0,
+                        quantity_in_cart = 0
                     });
 
                     // continue with the list
@@ -115,7 +121,10 @@ namespace bitcube.Controllers
                     res.Add(new
                     {
                         product_id = productToAdd.product_id,
-                        status = Utils.collection.CommonResponses.SUCCESS.ToString()
+                        status = Utils.collection.CommonResponses.SUCCESS.ToString(),
+                        item_price = dbProduct.productPrice,
+                        total_price = dbProduct.productPrice * dbCartProduct.quantity,
+                        quantity_in_cart = dbCartProduct.quantity
                     });
 
                     continue;
@@ -135,7 +144,10 @@ namespace bitcube.Controllers
                 res.Add(new
                 {
                     product_id = productToAdd.product_id,
-                    status = Utils.collection.CommonResponses.SUCCESS.ToString()
+                    status = Utils.collection.CommonResponses.SUCCESS.ToString(),
+                    item_price = dbProduct.productPrice,
+                    total_price = dbProduct.productPrice * cartProduct.quantity,
+                    quantity_in_cart = cartProduct.quantity
                 });
             }
 
@@ -146,6 +158,9 @@ namespace bitcube.Controllers
             return Ok(res);
         }
 
-
+        /*
+         *   
+         * 
+         */
     }
 }
