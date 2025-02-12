@@ -13,14 +13,14 @@ namespace bitcube.Controllers
     
     [ApiController]
     [Route("api/v1")]
-    public class Authorization : Controller
+    public class AuthorizationController : Controller
     {
         private readonly BitcubeContext dbContext; 
 
         /* 
          *   On construction setup the dbContext 
          */
-        public Authorization()
+        public AuthorizationController()
         {
             this.dbContext = new BitcubeContext();
         }

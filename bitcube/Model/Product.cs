@@ -10,8 +10,7 @@ namespace bitcube.Model
     public class Product
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long productId { get; set; }
+        public string productId { get; set; }
         
         [Required]
         public string productName { get; set;  }
@@ -24,5 +23,11 @@ namespace bitcube.Model
 
         [Required]
         public User createdBy { get; set; } = null!;
+
+        [Required]
+        public DateTime created { get; set; } 
+
+        [Required]
+        public DateTime last_updated { get; set; }
     }
 }
