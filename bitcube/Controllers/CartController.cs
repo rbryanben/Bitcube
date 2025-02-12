@@ -187,5 +187,81 @@ namespace bitcube.Controllers
 
             return Ok(cartProduct);
         }
+
+
+        /* 
+         *  Checkout the clients cart; will turn the cart to closed and deduct the items from stock
+         */
+        [HttpGet]
+        [Route("checkout")]
+        [AuthorizationRequired]
+        public async Task<IActionResult> checkout()
+        {
+            // Get the user 
+            var userData = (User)HttpContext.Items["userData"];
+            var user = await dbContext.users.FirstOrDefaultAsync(dbUser => dbUser.username == userData.username);
+
+            // Get the user's cart 
+            var cart = await Cart.getCartUsingUsername(userData.username, dbContext);
+
+            // If cart is null then there is no cart 
+            if (cart == null)
+            {
+                return NotFound(Utils.collection.errorResponse(404, "no active cart found"));
+            }
+
+            // Fetch the cart product 
+            var cartProducts = await dbContext.cartProducts
+                .Where(dbCartProduct => dbCartProduct.cart == cart)
+                .Select(dbCartProduct => new
+                {   
+                    product_id = dbCartProduct.product.productId,
+                    quantity_required = dbCartProduct.quantity,
+                    quantity_in_stock = dbCartProduct.product.quantity
+                }).ToListAsync();
+            
+            // Resultant list 
+            var res = new List<object>();
+
+            // Check if the cart items are in stock 
+            foreach(var cartProduct in cartProducts)
+            {
+                // Case enough stock 
+                if (cartProduct.quantity_required > cartProduct.quantity_in_stock)
+                {
+                    res.Add(new
+                    {
+                        product_id = cartProduct.product_id,
+                        error = Utils.collection.CommonResponses.NOT_ENOUGH_STOCK,
+                        in_stock = cartProduct.quantity_in_stock,
+                        required = cartProduct.quantity_required
+                    });
+                }    
+            }
+
+            // If there are error return the error list 
+            if (res.Count > 0)
+            {
+                return Conflict(res);
+            }
+
+            // Deduct the items from stock 
+            foreach (var cartProduct in cartProducts)
+            {
+                var dbCartProduct  = await dbContext.products
+                    .FirstOrDefaultAsync(dbProduct => dbProduct.productId == cartProduct.product_id);
+
+                dbCartProduct.quantity -= cartProduct.quantity_required;
+            }
+
+            // Close the cart 
+            cart.open = false;
+
+            // Apply database changes 
+            await dbContext.SaveChangesAsync();
+            
+            // Return the cart reference 
+            return Ok(cart.reference);
+        }
     }
 }
