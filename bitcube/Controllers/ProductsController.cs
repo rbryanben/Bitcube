@@ -41,7 +41,7 @@ namespace bitcube.Controllers
         public async Task<IActionResult> addProduct(ProductViewModel product)
         {
             // Get the user 
-            var userData = (User) HttpContext.Items["userData"];
+            var userData = (User)HttpContext.Items["userData"];
             var user = await dbContext.users.FirstOrDefaultAsync(dbUser => dbUser.username == userData.username);
 
             // Check if the product id exists 
@@ -111,5 +111,52 @@ namespace bitcube.Controllers
             // Return the products
             return Ok(products);
         }
+
+        /*
+        *   Delete a product given a product_id 
+        *   DELETE: 
+        *      product_id : string 
+        *   Requirements:  
+        *      - authorization is required
+        *      - user has to be the owner of the product
+        */
+        [HttpDelete]
+        [Route("delete-product")]
+        [AuthorizationRequired]
+        public async Task<IActionResult> deleteProduct(string product_id = null)
+        {
+
+            // Check if product_id is null 
+            if (String.IsNullOrEmpty(product_id))
+            {
+                return BadRequest(Utils.collection.errorResponse(400, "product_id cannot be null or empty"));
+            }
+
+            // Get the user 
+            var userData = (User)HttpContext.Items["userData"];
+
+            // Get the product 
+            var product = await dbContext.products.Include(dbProduct => dbProduct.createdBy).FirstOrDefaultAsync(dbProduct => dbProduct.productId == product_id);
+
+            // Check if the product does not exists 
+            if (product == null)
+            {
+                return NotFound(Utils.collection.errorResponse(404, $"product with id {product_id} was not found"));
+            }
+
+            // Check if the user is the owner of the product 
+            if (product.createdBy.username != userData.username)
+            {
+                HttpContext.Response.StatusCode = 403;
+                return Content($"user not owner of product with id {product_id}");
+            }
+
+            // Delete the product 
+            dbContext.products.Remove(product);
+            await dbContext.SaveChangesAsync();
+
+            return Ok(product_id);
+        }
+
     }
 }

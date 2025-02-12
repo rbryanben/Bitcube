@@ -52,3 +52,4 @@ C:\Users\rben\source\repos\bitcube\bitcube\bin\Debug\net5.0\runtimes\win-arm\nat
 C:\Users\rben\source\repos\bitcube\bitcube\bin\Debug\net5.0\runtimes\win-arm64\native\e_sqlite3.dll
 C:\Users\rben\source\repos\bitcube\bitcube\bin\Debug\net5.0\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\rben\source\repos\bitcube\bitcube\bin\Debug\net5.0\runtimes\win-x86\native\e_sqlite3.dll
+C:\Users\rben\source\repos\bitcube\bitcube\obj\Debug\net5.0\bitcube.csproj.AssemblyReference.cache
