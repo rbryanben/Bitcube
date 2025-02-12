@@ -114,20 +114,10 @@ namespace bitcube.Controllers
                         .Where(dbCartProduct => dbCartProduct.product == dbProduct)
                         .Where(dbCartProduct => dbCartProduct.cart == cart)
                         .FirstOrDefaultAsync();
+                    
 
-                    dbCartProduct.quantity += productToAdd.quantity;
-
-                    // Add the result to the resultant list 
-                    res.Add(new
-                    {
-                        product_id = productToAdd.product_id,
-                        status = Utils.collection.CommonResponses.SUCCESS.ToString(),
-                        item_price = dbProduct.productPrice,
-                        total_price = dbProduct.productPrice * dbCartProduct.quantity,
-                        quantity_in_cart = dbCartProduct.quantity
-                    });
-
-                    continue;
+                    // Remove the previous record
+                    dbContext.Remove(dbCartProduct);
                 }
 
                 // CartProduct to add 
