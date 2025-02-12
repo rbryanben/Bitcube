@@ -22,7 +22,15 @@ namespace bitcube.Model
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options) => options.UseSqlite($"Data Source={dbPath}");
-       
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Apply the productId to be unique
+            modelBuilder.Entity<Product>()
+                .HasIndex(product => new { product.productId })
+                .IsUnique(true);
+        }
+
         // Dataset 
         public DbSet<User> users { get; set; }
         public DbSet<Product> products { get; set; }

@@ -10,6 +10,9 @@ namespace bitcube.Model
     public class Product
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int id { get; set; }
+
         public string productId { get; set; }
         
         [Required]

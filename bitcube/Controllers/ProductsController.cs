@@ -71,5 +71,45 @@ namespace bitcube.Controllers
             });
         }
 
+
+        /*
+        *   Get all products in the order of their creation 
+        *   GET: 
+        *      count : default 200, max 500
+        *      index : -1 
+        *   Requirements:  
+        *      - authorization is required
+        */
+        [HttpGet]
+        [Route("get-products")]
+        [AuthorizationRequired]
+        public async Task<IActionResult> getProducts(int count = 200, int index = 0)
+        {
+            // Cap count 
+            count = Math.Min(count, 500);
+
+            // Fetch all products 
+            var products = await dbContext.products
+                .OrderBy(dbProduct => dbProduct.id)
+                .Take(count)
+                .Select(p => new
+                {
+                    id = p.id,
+                    product_id = p.productId,
+                    product_name = p.productName,
+                    price = p.productPrice,
+                    owner = p.createdBy.username,
+                    quantity = p.quantity,
+                    created = p.created,
+                    last_update = p.last_updated
+                })
+                .Where(p => p.id >= index).ToListAsync();
+
+            // Reverse the list
+            products.Reverse();
+
+            // Return the products
+            return Ok(products);
+        }
     }
 }

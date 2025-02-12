@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using bitcube.Model;
 
 namespace bitcube.Migrations
 {
     [DbContext(typeof(BitcubeContext))]
-    partial class BitcubeContextModelSnapshot : ModelSnapshot
+    [Migration("20250212082524_AddIdToProducts")]
+    partial class AddIdToProducts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
