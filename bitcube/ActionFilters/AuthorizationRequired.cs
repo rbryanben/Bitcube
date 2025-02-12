@@ -44,7 +44,7 @@ namespace bitcube.ActionFilters
             }
 
             // Attach the user to the request 
-            context.HttpContext.Items["user"] = user;
+            context.HttpContext.Items["userData"] = user;
 
             // Check if the key is valid 
             base.OnActionExecuting(context);

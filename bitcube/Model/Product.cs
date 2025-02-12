@@ -29,5 +29,21 @@ namespace bitcube.Model
 
         [Required]
         public DateTime last_updated { get; set; }
+
+        /*
+         *  Constructors 
+         */
+        public Product(string productId,string productName,double productPrice,long quantity, User creator)
+        {
+            this.productId = productId;
+            this.productName = productName;
+            this.productPrice = productPrice;
+            this.quantity = quantity;
+            this.createdBy = creator;
+            this.created = DateTime.Now;
+            this.last_updated = DateTime.Now;
+        }
+
+        public Product() { }
     }
 }
