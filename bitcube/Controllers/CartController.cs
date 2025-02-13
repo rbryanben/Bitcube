@@ -232,7 +232,7 @@ namespace bitcube.Controllers
                     res.Add(new
                     {
                         product_id = cartProduct.product_id,
-                        error = Utils.collection.CommonResponses.NOT_ENOUGH_STOCK,
+                        error = Utils.collection.CommonResponses.NOT_ENOUGH_STOCK.ToString(),
                         in_stock = cartProduct.quantity_in_stock,
                         required = cartProduct.quantity_required
                     });
