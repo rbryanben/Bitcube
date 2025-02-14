@@ -225,8 +225,7 @@ Complete your checkout by sending the below curl request. Upon submission the qu
 Authorization is required for this endpoint and you should provide your api key as `x-api-key` header parameter.
 ```curl
 curl --location 'http://localhost:8080/api/v1/checkout' \
---header 'x-api-key: cc99b58f-5abe-491b-ad81-7ca9f78b52b126dce7ef-a579-4d6e-97db-880d07984b46' \
---data ''
+--header 'x-api-key: cc99b58f-5abe-491b-ad81-7ca9f78b52b126dce7ef-a579-4d6e-97db-880d07984b46'
 ```
 409 - On Error 
 ```json
