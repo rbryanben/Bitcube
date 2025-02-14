@@ -67,7 +67,7 @@ Parameters `quantity` and `product_price` will default to zero if not supplied. 
 Authorization is required for this endpoint and you should provide your api key as `x-api-key` header parameter.
 ```curl
 curl --location 'http://localhost:8080/api/v1/add-product' \
---header 'x-api-key: 568ac8d4-1d67-4472-92c8-55629b9e19af90d3d927-2389-4deb-b5a1-199304207018' \
+--header 'x-api-key: cc99b58f-5abe-491b-ad81-7ca9f78b52b126dce7ef-a579-4d6e-97db-880d07984b46' \
 --header 'Content-Type: application/json' \
 --data '{
     "product_id" : "ZA002",
